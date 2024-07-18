@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const PaymentSchema = new mongoose.Schema(
   {
+    user:{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "teantants",
+      required: true,
+    },
     UserId: {
       type: String,
       required: true,
@@ -19,19 +24,18 @@ const PaymentSchema = new mongoose.Schema(
     },
     Maintaince: {
       type: Number,
-      default:0
+      default: 0,
     },
     Security: {
       type: Number,
-      default:0
+      default: 0,
     },
     DueAmount: {
       type: Number,
-      default:0
+      default: 0,
     },
     NumberOfmonth: {
       type: Number,
-      required: true,
     },
     PayemntDate: {
       type: Date,
