@@ -14,6 +14,7 @@ const RoomRouter = require("./Route/Rooms");
 const cloudinary = require("cloudinary");
 const UserRouter = require("./Route/Users");
 const paymentRouter = require("./Route/Payment");
+const StaffRouter=require('./Route/Staff')
 
 const app = express();
 
@@ -46,6 +47,7 @@ app.use("/api/v1/branch", BranchRouter);
 app.use("/api/v1/rooms", RoomRouter);
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/payment",paymentRouter );
+app.use("/api/v1/staff",StaffRouter);
 
 //--------------Not Found Route-------------------//
 app.get("*", (req, res, next) => {

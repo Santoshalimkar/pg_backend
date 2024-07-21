@@ -14,7 +14,7 @@ const CreateBranch = async (req, res, next) => {
     if (!result.isEmpty()) {
       return next(new AppErr(result.errors[0].msg, 403));
     }
-    let { Branchname, code } = req.body;
+    let { Branchname, code, Address, Number } = req.body;
     //----------Create Branch--------------//
     let response = await Api.create(BranchModel, req.body);
     if (response.status === 200) {
@@ -45,7 +45,7 @@ const UpdateBranch = async (req, res, next) => {
     if (!result.isEmpty()) {
       return next(new AppErr(result.errors[0].msg, 403));
     }
-    let { Branchname, code } = req.body;
+    let {  Branchname, code, Address, Number } = req.body;
     let { id } = req.params;
 
     //---------Check Branch ------------//

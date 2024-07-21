@@ -6,6 +6,11 @@ const StaffSchema = new mongoose.Schema(
       type: "string",
       required: true,
     },
+    branch: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "branch",
+      required: true,
+    },
     Number: {
       type: Number,
       required: true,
