@@ -6,6 +6,7 @@ const {
   UpdateBranch,
   GetAllBranch,
   GetSingleBranch,
+  totaladminandteants,
 } = require("../../Controller/SuperAdminAndAdmin/Branch");
 
 const BranchRouter = express.Router();
@@ -26,5 +27,6 @@ BranchRouter.put(
 );
 BranchRouter.get("/get/branch", GetAllBranch);
 BranchRouter.get("/get/branch/:id", GetSingleBranch);
+BranchRouter.get("/get/details/branch/:branchId", totaladminandteants);
 
 module.exports = BranchRouter;

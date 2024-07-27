@@ -2,6 +2,8 @@ const { validationResult } = require("express-validator");
 const AppErr = require("../../Services/AppErr");
 const Methods = require("../../Services/GlobalMethod/Method");
 const BranchModel = require("../../Model/SuperAdminAndAdmin/Branch");
+const UserModel = require("../../Model/User");
+const AdminModel = require("../../Model/SuperAdminAndAdmin/Admin");
 
 const Api = new Methods();
 
@@ -45,7 +47,7 @@ const UpdateBranch = async (req, res, next) => {
     if (!result.isEmpty()) {
       return next(new AppErr(result.errors[0].msg, 403));
     }
-    let {  Branchname, code, Address, Number } = req.body;
+    let { Branchname, code, Address, Number } = req.body;
     let { id } = req.params;
 
     //---------Check Branch ------------//
@@ -107,9 +109,42 @@ const GetSingleBranch = async (req, res, next) => {
   }
 };
 
+//------------------Create Total Admin and Teants---------------------------//
+
+const totaladminandteants = async (req, res, next) => {
+  try {
+    let { branchId } = req.params;
+
+    let branch = await BranchModel.findById(branchId);
+    if (!branch) {
+      return next(new AppErr("branch not found", 404));
+    }
+
+    let admins = await AdminModel.find()
+    let admincount=admins.filter((admin) => admin.branch.includes(branchId))
+    let user = await UserModel.find()
+    let usercount=user.filter((user) => user.branch.includes(branchId))
+
+    console.log(admincount)
+
+    return res.status(200).json({
+      status: true,
+      statuscode: 200,
+      message: "Branch details fetched successfully",
+      data: {
+        admins: admincount?.length,
+        user: usercount?.length,
+      },
+    });
+  } catch (error) {
+    next(new AppErr(error.message, 500));
+  }
+};
+
 module.exports = {
   CreateBranch,
   UpdateBranch,
   GetAllBranch,
   GetSingleBranch,
+  totaladminandteants
 };
