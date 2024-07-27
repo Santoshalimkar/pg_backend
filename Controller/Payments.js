@@ -167,7 +167,7 @@ const GetAllPaymentOfBranch = async (req, res, next) => {
       .populate({
         path: "user",
         populate: { path: "room", path: "branch" },
-      })
+      });
 
     return res.status(200).json({
       status: true,

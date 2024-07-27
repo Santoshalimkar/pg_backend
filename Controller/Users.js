@@ -384,6 +384,7 @@ const UserLogin = async (req, res, next) => {
       statuscode: 200,
       message: "User Loged in successfully",
       token: token,
+      user: user,
     });
   } catch (error) {
     return next(new AppErr(error.message, 500));

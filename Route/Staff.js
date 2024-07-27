@@ -13,6 +13,7 @@ const {
   getAllStaffBranch,
   getStaffdetails,
 } = require("../Controller/Staff/Staff");
+const { CreateSalary, UpdateSalary, GetStaffSalary } = require("../Controller/Staff/Salary");
 
 const StaffRouter = express.Router();
 
@@ -65,5 +66,26 @@ StaffRouter.get(
   getStaffdetails
 );
 //--------------------salary------------------------------//
+StaffRouter.post(
+  "/create/staff/salary",
+  body("staff").notEmpty().withMessage("Satff Id is required"),
+  body("Amount").notEmpty().withMessage("Amount is required"),
+  body("salarymonth").notEmpty().withMessage("salarymonth is required"),
+  IsSuperOrAdmin,
+  CreateSalary
+);
+StaffRouter.put(
+  "/update/staff/salary/:salaryId",
+  body("staff").notEmpty().withMessage("Satff Id is required"),
+  body("Amount").notEmpty().withMessage("Amount is required"),
+  body("salarymonth").notEmpty().withMessage("salarymonth is required"),
+  IsSuperOrAdmin,
+  UpdateSalary
+);
+StaffRouter.get(
+  "/get/staff/salary/:staff",
+  IsSuperOrAdmin,
+  GetStaffSalary
+);
 
 module.exports = StaffRouter;

@@ -237,6 +237,7 @@ const GetAllAdmin = async (req, res, next) => {
 const GetSingleAdmin = async (req, res, next) => {
   try {
     let { id } = req.params;
+    console.log(id)
     let admin = await AdminModel.findById(id);
     return res.status(200).json({
       status: true,
