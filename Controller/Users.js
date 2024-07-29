@@ -27,6 +27,9 @@ const AddNewUserRoom = async (req, res, next) => {
       DueAmount,
       NumberOfmonth,
       branch,
+      AadharNumber,
+      Address,
+      Email
     } = req.body;
 
     //--------------Check UserNumber -------------//
@@ -147,18 +150,10 @@ const GetAllUserbyBranch = async (req, res, next) => {
 
 const GetSingleUserbyBranch = async (req, res, next) => {
   try {
-    let { branchid, userId } = req.params;
+    let { userId } = req.params;
 
-    if (!branchid) {
-      return next(new AppErr("BranchId is required", 403));
-    }
-    let branch = await BranchModel.findById(branchid);
-    if (!branch) {
-      return next(new AppErr("Branch not found", 404));
-    }
-
-    let user = await UserModel.find({ branch: branchid, _id: userId })
-      .populate("room")
+    let user = await UserModel.findById(userId)
+      // .populate("room")
       .populate("Payment")
       .populate("branch");
 
@@ -172,7 +167,6 @@ const GetSingleUserbyBranch = async (req, res, next) => {
     return next(new AppErr(error.message, 500));
   }
 };
-
 //-----------Get Users Based on Paid And Pending Status ----------//
 
 const GetUserbyStatus = async (req, res, next) => {
@@ -212,6 +206,9 @@ const UpdateUserRoom = async (req, res, next) => {
       DueAmount,
       NumberOfmonth,
       branch,
+      AadharNumber,
+      Address,
+      Email
     } = req.body;
 
     //--------------Check User-------------//
@@ -410,6 +407,45 @@ const GetOwnRoom = async (req, res, next) => {
     return next(new AppErr(error.message, 500));
   }
 };
+
+//--------------Remove user From Room--------------------//
+
+const removeuserfromRoom = async (req, res, next) => {
+  try {
+    let { userId } = req.params;
+    if (!userId) {
+      return next("userId is required", 403);
+    }
+    let user = await UserModel.findById(userId);
+    if (!user) {
+      return next(new AppErr("User not found", 404));
+    }
+    let room = await RoomModel.find({ Users: { $in: [userId] } });
+    if (!room) {
+      return next(new AppErr("Room not found", 404));
+    }
+    if (room.Users.includes(user._id)) {
+      room.Users.filter((user) => user === user._id);
+      room.reaminingBed += 1;
+    }
+
+    user.room = [];
+    user.leftroom = true;
+
+    await user.save();
+    await room.save();
+
+    return res.status(200).json({
+      status: true,
+      statuscode: 200,
+      message: "User Removed from Pg",
+      data: user,
+    });
+  } catch (error) {
+    return next(new AppErr(error.message, 500));
+  }
+};
+
 module.exports = {
   AddNewUserRoom,
   GetAllUserbyBranch,
@@ -419,4 +455,5 @@ module.exports = {
   ChangeRoom,
   UserLogin,
   GetOwnRoom,
+  removeuserfromRoom,
 };

@@ -9,6 +9,7 @@ const {
   ChangeRoom,
   UserLogin,
   GetOwnRoom,
+  removeuserfromRoom,
 } = require("../Controller/Users");
 const { body } = require("express-validator");
 const { isUser } = require("../MiddleWare/IsUser");
@@ -31,7 +32,7 @@ UserRouter.post(
 UserRouter.get("/get/user/:branchid", IsSuperOrAdmin, GetAllUserbyBranch);
 
 UserRouter.get(
-  "/get/user/:branchid/:userId",
+  "/get/Singleuser/:userId",
   IsSuperOrAdmin,
   GetSingleUserbyBranch
 );
@@ -65,5 +66,7 @@ UserRouter.post(
 );
 
 UserRouter.get("/profile/user", isUser, GetOwnRoom);
+
+UserRouter.put("/remove/user/:userId", IsSuperOrAdmin, removeuserfromRoom);
 
 module.exports = UserRouter;

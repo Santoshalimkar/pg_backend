@@ -8,8 +8,14 @@ const UserSchema = new mongoose.Schema(
     },
     AadharNumber: {
       type: Number,
+      required: true,
+      unique: true,
     },
     Address: {
+      type: String,
+      required: true,
+    },
+    Email: {
       type: String,
     },
     UserId: {
@@ -61,6 +67,14 @@ const UserSchema = new mongoose.Schema(
         required: true,
       },
     ],
+    NumberOfmonth: {
+      type: Number,
+    },
+    leftroom: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   { timestamps: true }
 );

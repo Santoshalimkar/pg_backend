@@ -5,11 +5,7 @@
 //  (4) Total Earning this month
 //  (5) Total expence this month
 
-
-const GetDashBoardDetails=async(req,res,next)=>{
-    try {
-        
-    } catch (error) {
-        
-    }
-}
+const GetDashBoardDetails = async (req, res, next) => {
+  try {
+  } catch (error) {}
+};

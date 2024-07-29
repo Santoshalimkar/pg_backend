@@ -120,12 +120,11 @@ const totaladminandteants = async (req, res, next) => {
       return next(new AppErr("branch not found", 404));
     }
 
-    let admins = await AdminModel.find()
-    let admincount=admins.filter((admin) => admin.branch.includes(branchId))
-    let user = await UserModel.find()
-    let usercount=user.filter((user) => user.branch.includes(branchId))
+    let admins = await AdminModel.find();
+    let admincount = admins.filter((admin) => admin.branch.includes(branchId));
+    let user = await UserModel.find();
+    let usercount = user.filter((user) => user.branch.includes(branchId));
 
-    console.log(admincount)
 
     return res.status(200).json({
       status: true,
@@ -146,5 +145,5 @@ module.exports = {
   UpdateBranch,
   GetAllBranch,
   GetSingleBranch,
-  totaladminandteants
+  totaladminandteants,
 };
