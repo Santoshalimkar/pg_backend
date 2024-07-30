@@ -29,7 +29,7 @@ const AddNewUserRoom = async (req, res, next) => {
       branch,
       AadharNumber,
       Address,
-      Email
+      Email,
     } = req.body;
 
     //--------------Check UserNumber -------------//
@@ -208,7 +208,7 @@ const UpdateUserRoom = async (req, res, next) => {
       branch,
       AadharNumber,
       Address,
-      Email
+      Email,
     } = req.body;
 
     //--------------Check User-------------//

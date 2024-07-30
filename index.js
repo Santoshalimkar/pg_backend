@@ -17,6 +17,7 @@ const paymentRouter = require("./Route/Payment");
 const StaffRouter = require("./Route/Staff");
 const expenceRouter = require("./Route/Expence");
 const TicketRouter = require("./Route/Ticket");
+const DashBoardRouter = require("./Route/DashBoard");
 
 const app = express();
 
@@ -52,6 +53,7 @@ app.use("/api/v1/payment", paymentRouter);
 app.use("/api/v1/staff", StaffRouter);
 app.use("/api/v1/expence", expenceRouter);
 app.use("/api/v1/ticket", TicketRouter);
+app.use("/api/v1/dashboard", DashBoardRouter);
 
 //--------------Not Found Route-------------------//
 app.get("*", (req, res, next) => {

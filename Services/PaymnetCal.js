@@ -1,6 +1,11 @@
-function getMonthDayDifference(startDate, endDate) {
-  let start = new Date(startDate);
-  let end = new Date(endDate);
+function parseDate(dateString) {
+  const [day, month, year] = dateString.split("/").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function getMonthDayDifference(startDateString, endDateString) {
+  let start = parseDate(startDateString);
+  let end = parseDate(endDateString);
 
   // Calculate total months difference
   let totalMonths =
@@ -12,6 +17,7 @@ function getMonthDayDifference(startDate, endDate) {
   let days = end.getDate() - start.getDate();
   if (days < 0) {
     totalMonths--;
+    // Get the number of days in the previous month
     days += new Date(end.getFullYear(), end.getMonth(), 0).getDate();
   }
 

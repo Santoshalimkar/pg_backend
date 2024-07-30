@@ -162,12 +162,7 @@ const GetAllPaymentOfBranch = async (req, res, next) => {
     }
     let payment = await PaymentModel.find({
       branch: { $in: [branchId] },
-    })
-      .populate("user")
-      .populate({
-        path: "user",
-        populate: { path: "room", path: "branch" },
-      });
+    });
 
     return res.status(200).json({
       status: true,
@@ -180,9 +175,33 @@ const GetAllPaymentOfBranch = async (req, res, next) => {
   }
 };
 
+//----------Get Single Payment-------------//
+
+const SinglePayment = async (req, res, next) => {
+  try {
+    let {paymentId}=req.params
+
+    if(!paymentId) {
+      return next(new AppErr("PaymentId is required",404));
+    }
+
+    let payment=await PaymentModel.findById(paymentId)
+    return res.status(200).json({
+      status: true,
+      statuscode: 200,
+      message: "Payment Fetched successfully",
+      data: payment,
+    });
+
+  } catch (error) {
+    return next(new AppErr(error.message, 500));
+  }
+};
+
 module.exports = {
   CreatePayment,
   CalculateRent,
   UpdatePayment,
   GetAllPaymentOfBranch,
+  SinglePayment
 };

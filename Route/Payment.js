@@ -1,6 +1,12 @@
 const express = require("express");
 const { IsSuperOrAdmin } = require("../MiddleWare/isSuperOrAdmin");
-const { CreatePayment, CalculateRent, UpdatePayment, GetAllPaymentOfBranch } = require("../Controller/Payments");
+const {
+  CreatePayment,
+  CalculateRent,
+  UpdatePayment,
+  GetAllPaymentOfBranch,
+  SinglePayment,
+} = require("../Controller/Payments");
 const { body } = require("express-validator");
 
 const paymentRouter = express.Router();
@@ -34,9 +40,15 @@ paymentRouter.put(
 );
 
 paymentRouter.get(
-    "/get/payment/:branchId",
-    IsSuperOrAdmin,
-    GetAllPaymentOfBranch
-  );
+  "/get/payment/:branchId",
+  IsSuperOrAdmin,
+  GetAllPaymentOfBranch
+);
+
+paymentRouter.get(
+  "/get/singlepayment/:paymentId",
+  IsSuperOrAdmin,
+  SinglePayment
+);
 
 module.exports = paymentRouter;
