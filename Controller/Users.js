@@ -132,7 +132,7 @@ const GetAllUserbyBranch = async (req, res, next) => {
       return next(new AppErr("Branch not found", 404));
     }
 
-    let user = await UserModel.find({ branch: branchid })
+    let user = await UserModel.find({ branch: branchid, leftroom: false })
       .populate("room")
       .populate("Payment")
       .populate("branch");
@@ -174,7 +174,7 @@ const GetSingleUserbyBranch = async (req, res, next) => {
 const GetUserbyStatus = async (req, res, next) => {
   try {
     let { status } = req.query;
-    let user = await UserModel.find({ Status: status })
+    let user = await UserModel.find({ Status: status, leftroom: false })
       .populate("room")
       .populate("Payment")
       .populate("branch");
@@ -372,6 +372,7 @@ const UserLogin = async (req, res, next) => {
     let user = await UserModel.findOne({
       UserId: UserId,
       UserNumber: UserNumber,
+      leftroom: false
     });
     if (!user) {
       return next(new AppErr("Wrong UserId or UserNumber", 404));
