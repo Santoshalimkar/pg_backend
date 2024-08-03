@@ -241,7 +241,7 @@ const UpdateUserRoom = async (req, res, next) => {
 
     user.UserId = UserName.slice(0, 2) + "/" + UserNumber;
     // user.LastDate = addMonth(StartDate, NumberOfmonth);
-    user.LastDate=LastDate
+    user.LastDate = LastDate
     user.Status = DueAmount > 0 ? "Due" : "Paid";
     user.UserName = UserName;
     user.UserNumber = UserNumber;
@@ -416,32 +416,43 @@ const GetOwnRoom = async (req, res, next) => {
 const removeuserfromRoom = async (req, res, next) => {
   try {
     let { userId } = req.params;
+
     if (!userId) {
-      return next("userId is required", 403);
+      return next(new AppErr("userId is required", 403));
     }
+
+    // Find the user by ID
     let user = await UserModel.findById(userId);
     if (!user) {
       return next(new AppErr("User not found", 404));
     }
-    let room = await RoomModel.find({ Users: { $in: [userId] } });
+
+    // Find the room that contains the user
+    let room = await RoomModel.findOne({ Users: { $in: [userId] } });
     if (!room) {
       return next(new AppErr("Room not found", 404));
     }
-    if (room.Users.includes(user._id)) {
-      room.Users.filter((user) => user === user._id);
-      room.reaminingBed += 1;
-    }
 
+    // Remove the user from the room's Users array
+    room.Users = room.Users.filter(userIdInRoom => userIdInRoom.toString() !== userId);
+
+    // Update the remaining beds count
+    room.reaminingBed += 1;
+
+    // Save the updated room document
+    await room.save();
+
+    // Update the user's room status
     user.room = [];
     user.leftroom = true;
 
+    // Save the updated user document
     await user.save();
-    await room.save();
 
     return res.status(200).json({
       status: true,
       statuscode: 200,
-      message: "User Removed from Pg",
+      message: "User removed from room",
       data: user,
     });
   } catch (error) {
