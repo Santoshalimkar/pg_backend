@@ -21,16 +21,12 @@ const DashBoardRouter = require("./Route/DashBoard");
 
 const app = express();
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-  methods: "GET,POST,PUT,DELETE,PATCH",
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
+
 
 //------IN Build Middleware----------//
 app.use(morgan("combined"));
 app.use(helmet());
-app.use(cors(corsOptions));
+app.use(cors());
 app.use(mongosantize());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));

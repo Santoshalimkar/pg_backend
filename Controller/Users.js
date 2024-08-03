@@ -30,6 +30,7 @@ const AddNewUserRoom = async (req, res, next) => {
       AadharNumber,
       Address,
       Email,
+      LastDate
     } = req.body;
 
     //--------------Check UserNumber -------------//
@@ -63,7 +64,7 @@ const AddNewUserRoom = async (req, res, next) => {
     }
     req.body.UserId = UserName.slice(0, 2) + "/" + UserNumber;
     req.body.BookedDate = new Date();
-    req.body.LastDate = addMonth(StartDate, NumberOfmonth);
+    // req.body.LastDate = addMonth(StartDate, NumberOfmonth);
 
     if (DueAmount > 0) {
       req.body.Status = "Due";
@@ -80,7 +81,8 @@ const AddNewUserRoom = async (req, res, next) => {
       DueAmount: DueAmount,
       NumberOfmonth: NumberOfmonth,
       PayemntDate: new Date(),
-      LastDueDate: addMonth(StartDate, NumberOfmonth),
+      // LastDueDate: addMonth(StartDate, NumberOfmonth),
+      LastDueDate: LastDate,
       branch: branch,
     });
     payment = await payment.save();
@@ -209,6 +211,7 @@ const UpdateUserRoom = async (req, res, next) => {
       AadharNumber,
       Address,
       Email,
+      LastDate
     } = req.body;
 
     //--------------Check User-------------//
@@ -237,7 +240,8 @@ const UpdateUserRoom = async (req, res, next) => {
     }
 
     user.UserId = UserName.slice(0, 2) + "/" + UserNumber;
-    user.LastDate = addMonth(StartDate, NumberOfmonth);
+    // user.LastDate = addMonth(StartDate, NumberOfmonth);
+    user.LastDate=LastDate
     user.Status = DueAmount > 0 ? "Due" : "Paid";
     user.UserName = UserName;
     user.UserNumber = UserNumber;
@@ -267,15 +271,14 @@ const UpdateUserRoom = async (req, res, next) => {
       payment.Security = Security;
       payment.DueAmount = DueAmount;
       payment.NumberOfmonth = NumberOfmonth;
-      payment.LastDueDate = addMonth(StartDate, NumberOfmonth);
+      payment.LastDueDate = LastDate
       payment.branch = branch;
       await payment.save();
     }
 
     let olduser = await UserModel.findById(req.params.userId);
     let oldRoom = await RoomModel.findById(olduser.room[0]);
-    console.log(oldRoom);
-    console.log(rooms);
+
 
     if (oldRoom._id.toString() !== rooms._id.toString()) {
       oldRoom.Users = oldRoom.Users.filter(

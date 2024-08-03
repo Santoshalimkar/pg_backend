@@ -8,12 +8,10 @@ const UserSchema = new mongoose.Schema(
     },
     AadharNumber: {
       type: Number,
-      required: true,
       unique: true,
     },
     Address: {
       type: String,
-      required: true,
     },
     Email: {
       type: String,

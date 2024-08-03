@@ -30,7 +30,7 @@ StaffRouter.put(
   UpdateCategory
 );
 StaffRouter.get("/get/staff/Categories", IsSuperOrAdmin, GetAllCategory);
-StaffRouter.get("/get/staff/Categories/:id", IsSuperOrAdmin, GetSingleCategory);
+StaffRouter.get("/get/singlestaff/Categories/:id", IsSuperOrAdmin, GetSingleCategory);
 
 //--------------------Staff ------------------------------//
 StaffRouter.post(
@@ -60,7 +60,7 @@ StaffRouter.get(
   getAllStaffBranch
 );
 StaffRouter.get(
-  "/getdetails/staff/:staffId",
+  "/getsingle/staff/:staffId",
   body("staffId").notEmpty().withMessage("staffId is required"),
   IsSuperOrAdmin,
   getStaffdetails

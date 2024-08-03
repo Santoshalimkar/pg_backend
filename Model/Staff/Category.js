@@ -5,6 +5,7 @@ const CategorySchema = new mongoose.Schema(
     name: {
       type: "string",
       required: true,
+      unique:true
     },
     Staff: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Staff", required: true },

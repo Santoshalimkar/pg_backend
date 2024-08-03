@@ -27,7 +27,7 @@ TicketRouter.post(
 TicketRouter.get("/getmy/ticket", isUser, GetAllMyTicket);
 TicketRouter.get(
   "/get/ticket/branch/:branchId",
-  IsSuperOrAdmin,
+  // IsSuperOrAdmin,
   GetTicketbybranch
 );
 TicketRouter.get(
@@ -46,4 +46,4 @@ TicketRouter.put(
 TicketRouter.put("/close/ticket/:ticketId", isUser, CloseTicket);
 
 
-module.exports=TicketRouter
+module.exports = TicketRouter

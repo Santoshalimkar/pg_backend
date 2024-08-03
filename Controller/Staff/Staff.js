@@ -95,7 +95,7 @@ const UpdateStaff = async (req, res, next) => {
 const getAllStaffBranch = async (req, res, next) => {
   try {
     let { branch } = req.params;
-    let staff = await StaffModel.find({ branch: branch }).populate("Salary");
+    let staff = await StaffModel.find({ branch: branch }).populate("Salary").populate("Category");
 
     return res.status(200).json({
       status: true,
