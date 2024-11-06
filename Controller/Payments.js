@@ -179,20 +179,19 @@ const GetAllPaymentOfBranch = async (req, res, next) => {
 
 const SinglePayment = async (req, res, next) => {
   try {
-    let {paymentId}=req.params
+    let { paymentId } = req.params;
 
-    if(!paymentId) {
-      return next(new AppErr("PaymentId is required",404));
+    if (!paymentId) {
+      return next(new AppErr("PaymentId is required", 404));
     }
 
-    let payment=await PaymentModel.findById(paymentId)
+    let payment = await PaymentModel.findById(paymentId);
     return res.status(200).json({
       status: true,
       statuscode: 200,
       message: "Payment Fetched successfully",
       data: payment,
     });
-
   } catch (error) {
     return next(new AppErr(error.message, 500));
   }
@@ -203,5 +202,5 @@ module.exports = {
   CalculateRent,
   UpdatePayment,
   GetAllPaymentOfBranch,
-  SinglePayment
+  SinglePayment,
 };
