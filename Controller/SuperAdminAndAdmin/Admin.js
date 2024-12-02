@@ -2,7 +2,6 @@ const { validationResult } = require("express-validator");
 const AdminModel = require("../../Model/SuperAdminAndAdmin/Admin");
 const AppErr = require("../../Services/AppErr");
 const Methods = require("../../Services/GlobalMethod/Method");
-const bcrypt = require("bcrypt");
 const BranchModel = require("../../Model/SuperAdminAndAdmin/Branch");
 const GenerateToken = require("../../Services/Jwt/GenerteToken");
 
@@ -28,11 +27,11 @@ const CreateAdmin = async (req, res, next) => {
       return next(new AppErr("Number Already Exists", 402));
     }
     //----------------Hash Password ----------------//
-    const salt = bcrypt.genSaltSync(15);
-    const hash = bcrypt.hashSync(Password, salt);
+   // const salt = bcrypt.genSaltSync(15);
+    // const hash = bcrypt.hashSync(Password, salt);
 
     //------------Add Hash Password -------------//
-    req.body.Password = hash;
+   // req.body.Password = hash;
     req.body.activate = true;
 
     //---------------Check Branch-------------------//
@@ -101,11 +100,11 @@ const UpdateAdmin = async (req, res, next) => {
       return next(new AppErr("Number Already Exists", 402));
     }
     //----------------Hash Password ----------------//
-    const salt = bcrypt.genSaltSync(15);
-    const hash = bcrypt.hashSync(Password, salt);
+   // const salt = bcrypt.genSaltSync(15);
+   // const hash = bcrypt.hashSync(Password, salt);
 
     //------------Add Hash Password -------------//
-    req.body.Password = hash;
+   // req.body.Password = hash;
     req.body.activate = true;
 
     //---------------Check Branch-------------------//
