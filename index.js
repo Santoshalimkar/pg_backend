@@ -18,6 +18,7 @@ const StaffRouter = require("./Route/Staff");
 const expenceRouter = require("./Route/Expence");
 const TicketRouter = require("./Route/Ticket");
 const DashBoardRouter = require("./Route/DashBoard");
+DbConnection();
 
 const app = express();
 
@@ -60,7 +61,6 @@ app.get("*", (req, res, next) => {
 app.use(globalErrHandler);
 
 const PORT = process.env.PORT || 8080;
-DbConnection();
 app.listen(PORT, () => {
   console.log(`listening on ${PORT}`);
 });
