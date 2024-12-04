@@ -60,7 +60,7 @@ app.get("*", (req, res, next) => {
 app.use(globalErrHandler);
 
 const PORT = process.env.PORT || 8080;
+DbConnection();
 app.listen(PORT, () => {
-  DbConnection();
   console.log(`listening on ${PORT}`);
 });
