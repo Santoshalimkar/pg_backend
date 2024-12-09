@@ -1,7 +1,6 @@
 const { validationResult } = require("express-validator");
 const AppErr = require("../../Services/AppErr");
 const SuperAdminModel = require("../../Model/SuperAdminAndAdmin/SuperAdmin");
-const bcrypt = require("bcrypt");
 const Methods = require("../../Services/GlobalMethod/Method");
 const GenerateToken = require("../../Services/Jwt/GenerteToken");
 
@@ -27,12 +26,9 @@ const CreateSuperAdmin = async (req, res, next) => {
     if (NumberFound.length > 0) {
       return next(new AppErr("Number Already Exists", 402));
     }
-    //----------------Hash Password ----------------//
-    const salt = bcrypt.genSaltSync(15);
-    const hash = bcrypt.hashSync(Password, salt);
 
-    //------------Add Hash Password -------------//
-    req.body.Password = hash;
+    //------------Store Plain Password-------------//
+    req.body.Password = Password;
     req.body.role = "owner";
 
     //----------------Create Super Admin ---------------//
@@ -89,10 +85,10 @@ const GetSuperAdmin = async (req, res, next) => {
 };
 
 //------------------Get By Id Super Admin -------------//
+
 const GetSuperAdminID = async (req, res, next) => {
   try {
     let { id } = req.params;
-    console.log(id);
     let response = await Api.getById(SuperAdminModel, id);
     if (response.status === 200) {
       return res.status(200).json({
@@ -140,14 +136,11 @@ const UpdateSuperAdmin = async (req, res, next) => {
     if (NumberFound.length > 0) {
       return next(new AppErr("Number Already Exists", 402));
     }
-    //----------------Hash Password ----------------//
-    const salt = bcrypt.genSaltSync(15);
-    const hash = bcrypt.hashSync(Password, salt);
 
-    //------------Add Hash Password -------------//
-    req.body.Password = hash;
+    //------------Store Plain Password-------------//
+    req.body.Password = Password;
 
-    //----------------Create Super Admin ---------------//
+    //----------------Update Super Admin ---------------//
     try {
       const response = await Api.update(SuperAdminModel, id, req.body);
       if (response.status === 200) {
@@ -176,7 +169,8 @@ const UpdateSuperAdmin = async (req, res, next) => {
   }
 };
 
-//---------------Login SUPER ADmin ----------------//
+//---------------Login Super Admin ----------------//
+
 const LoginSuperAdmin = async (req, res, next) => {
   try {
     //------------Validation Check ---------------//
@@ -199,12 +193,11 @@ const LoginSuperAdmin = async (req, res, next) => {
     }
 
     //------------Check Password-------------//
-    let PasswordCheck = bcrypt.compareSync(Password, EmailFound.Password);
-    if (!PasswordCheck) {
+    if (EmailFound.Password !== Password) {
       return next(new AppErr("Invalid Password", 404));
     }
-    //------------Generate Token --------------//
 
+    //------------Generate Token --------------//
     const payload = { id: EmailFound._id, role: "owner" };
     const token = GenerateToken(payload);
 
@@ -224,15 +217,8 @@ const LoginSuperAdmin = async (req, res, next) => {
 
 const BlockSuperAdmin = async (req, res, next) => {
   try {
-    //------------Validation Check ---------------//
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      return next(new AppErr(result.errors[0].msg, 403));
-    }
     let id = req.params.id;
-    console.log(id)
     let superadmin = await SuperAdminModel.findById(id);
-    console.log(superadmin)
     superadmin.blocked = true;
     await superadmin.save();
 
@@ -246,27 +232,19 @@ const BlockSuperAdmin = async (req, res, next) => {
   }
 };
 
-
-//-------------------Block Super Admin -------------------------//
+//-------------------Unblock Super Admin -------------------------//
 
 const UNBlockSuperAdmin = async (req, res, next) => {
   try {
-    //------------Validation Check ---------------//
-    const result = validationResult(req);
-    if (!result.isEmpty()) {
-      return next(new AppErr(result.errors[0].msg, 403));
-    }
     let id = req.params.id;
-    console.log(id)
     let superadmin = await SuperAdminModel.findById(id);
-    console.log(superadmin)
     superadmin.blocked = false;
     await superadmin.save();
 
     return res.status(200).json({
       status: true,
       statuscode: 200,
-      message: "UnBlocked successfully",
+      message: "Unblocked successfully",
     });
   } catch (error) {
     return next(new AppErr(error.message, 500));
@@ -280,5 +258,5 @@ module.exports = {
   UpdateSuperAdmin,
   LoginSuperAdmin,
   BlockSuperAdmin,
-  UNBlockSuperAdmin
+  UNBlockSuperAdmin,
 };
