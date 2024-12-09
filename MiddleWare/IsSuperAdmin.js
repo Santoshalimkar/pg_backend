@@ -7,6 +7,7 @@ const IsSuperAdmin = async (req, res, next) => {
     let { token } = req.headers;
     let decoded = VerifyToken(token);
     req.super = decoded.id;
+    console.log(decoded)
     if (!decoded) {
       return next(new AppErr("Invalid token", 404));
     }

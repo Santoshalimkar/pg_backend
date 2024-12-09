@@ -19,7 +19,7 @@ const AdminSchema = new mongoose.Schema(
       required: true,
     },
     branch: {
-      type: [],
+      type:[],
     },
     permission: {
       type: [],

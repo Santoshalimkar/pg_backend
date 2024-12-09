@@ -5,6 +5,7 @@ const {
   UpdateExpense,
   GetAllExpenses,
   GetSinlgeExpences,
+  Deleteexpence,
 } = require("../Controller/Expense");
 const { body } = require("express-validator");
 const { IsSuperOrAdmin } = require("../MiddleWare/isSuperOrAdmin");
@@ -40,5 +41,7 @@ expenceRouter.get(
 );
 
 expenceRouter.get("/get/expense/:expenceId", IsSuperOrAdmin, GetSinlgeExpences);
+
+expenceRouter.delete("/expence/delete/:expenceId", IsSuperAdmin, Deleteexpence)
 
 module.exports = expenceRouter;

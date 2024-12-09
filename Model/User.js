@@ -65,6 +65,11 @@ const UserSchema = new mongoose.Schema(
         required: true,
       },
     ],
+    files: {
+      profile: [String],
+      aadhar: [String],
+      optional: [String]
+    },
     NumberOfmonth: {
       type: Number,
     },
@@ -73,6 +78,9 @@ const UserSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
+    devicetoken: {
+      type: String
+    }
   },
   { timestamps: true }
 );

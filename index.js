@@ -18,11 +18,10 @@ const StaffRouter = require("./Route/Staff");
 const expenceRouter = require("./Route/Expence");
 const TicketRouter = require("./Route/Ticket");
 const DashBoardRouter = require("./Route/DashBoard");
+const NotificationRouter = require("./Route/Notification");
+
 DbConnection();
-
 const app = express();
-
-
 
 //------IN Build Middleware----------//
 app.use(morgan("combined"));
@@ -51,6 +50,7 @@ app.use("/api/v1/staff", StaffRouter);
 app.use("/api/v1/expence", expenceRouter);
 app.use("/api/v1/ticket", TicketRouter);
 app.use("/api/v1/dashboard", DashBoardRouter);
+app.use("/api/v1/notification", NotificationRouter);
 
 //--------------Not Found Route-------------------//
 app.get("*", (req, res, next) => {

@@ -4,39 +4,28 @@ function parseDate(dateString) {
 }
 
 function getMonthDayDifference(startDateString, endDateString) {
-  let start = parseDate(startDateString);
-  let end = parseDate(endDateString);
+  console.log(startDateString)
+  const start = parseDate(startDateString);
+  const end = parseDate(endDateString);
 
-  // Calculate total months difference
-  let totalMonths =
-    (end.getFullYear() - start.getFullYear()) * 12 +
-    end.getMonth() -
-    start.getMonth();
-
-  // Calculate days difference
+  let months = (end.getFullYear() - start.getFullYear()) * 12 + end.getMonth() - start.getMonth();
   let days = end.getDate() - start.getDate();
+
+  // Adjust months if days difference is negative
   if (days < 0) {
-    totalMonths--;
-    // Get the number of days in the previous month
-    days += new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+    months--;
+    const lastMonthEnd = new Date(end.getFullYear(), end.getMonth(), 0).getDate();
+    days += lastMonthEnd;
   }
 
-  return { months: totalMonths, days: days };
+  return { months: months, days: days };
 }
 
 function calculateRent(monthlyRent, months, days, currentDue) {
-  // Calculate rent for full months
   let totalRent = monthlyRent * months;
-
-  // Calculate daily rent (assuming 30 days in a month)
   const dailyRent = monthlyRent / 30;
-
-  // Calculate rent for the remaining days
   totalRent += dailyRent * days;
-
-  // Add the current due amount
   totalRent += currentDue;
-
   return totalRent;
 }
 

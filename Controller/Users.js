@@ -7,6 +7,8 @@ const AdminModel = require("../Model/SuperAdminAndAdmin/Admin");
 const UserModel = require("../Model/User");
 const BranchModel = require("../Model/SuperAdminAndAdmin/Branch");
 const GenerateToken = require("../Services/Jwt/GenerteToken");
+const cloudinary = require("cloudinary");
+const fs = require('fs');
 
 //----------Add New User to Room -------------//
 const AddNewUserRoom = async (req, res, next) => {
@@ -367,8 +369,8 @@ const UserLogin = async (req, res, next) => {
     if (!result.isEmpty()) {
       return next(new AppErr(result.errors[0].msg, 403));
     }
-    let { UserId, UserNumber } = req.body;
-
+    let { UserId, UserNumber, devicetoken } = req.body;
+console.log(devicetoken)
     let user = await UserModel.findOne({
       UserId: UserId,
       UserNumber: UserNumber,
@@ -379,6 +381,9 @@ const UserLogin = async (req, res, next) => {
     }
     const payload = { id: user._id };
     let token = GenerateToken(payload);
+
+    user.devicetoken = devicetoken
+    await user.save()
 
     return res.status(200).json({
       status: true,
@@ -461,6 +466,58 @@ const removeuserfromRoom = async (req, res, next) => {
   }
 };
 
+//-----------Add File of Users---------------------//
+
+const AddUserFiles = async (req, res, next) => {
+  console.log(req.file)
+  try {
+    const { filetype, userid } = req.params;
+    const validTypes = ['profile', 'aadhar', 'optional'];
+
+    if (!validTypes.includes(filetype)) {
+      return next(new AppErr('Invalid file type', 400));
+    }
+
+    const user = await UserModel.findById(userid);
+    if (!user) {
+      return next(new AppErr('User not found', 404));
+    }
+
+    if (!req.file) {
+      return next(new AppErr('No file uploaded', 400));
+
+    }
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: 'Pg',
+    });
+
+    user.files[filetype].push(result.secure_url);
+    await user.save();
+
+    fs.unlink(req.file.path, (err) => {
+      if (err) {
+        console.error('Failed to delete local file:', err);
+        return res.status(200).json({
+          status: true,
+          message: `${filetype} uploaded successfully, but failed to delete local file.`,
+          fileUrl: result.secure_url,
+        });
+      }
+    }
+    )
+
+    return res.status(200).json({
+      status: true,
+      statuscode: 200,
+      message: `${filetype} uploaded successfully`,
+    });
+
+  } catch (error) {
+    return next(new AppErr(error.message, 500));
+  }
+}
+
+
 module.exports = {
   AddNewUserRoom,
   GetAllUserbyBranch,
@@ -471,4 +528,5 @@ module.exports = {
   UserLogin,
   GetOwnRoom,
   removeuserfromRoom,
+  AddUserFiles
 };

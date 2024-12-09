@@ -1,12 +1,18 @@
 const ExpenseModel = require("../Model/Expense");
+const NotificationModel = require("../Model/Notification");
 const PaymentModel = require("../Model/Payment");
 const RoomModel = require("../Model/Rooms");
+const CategoryModel = require("../Model/Staff/Category");
+const StaffModel = require("../Model/Staff/Staff");
+const AdminModel = require("../Model/SuperAdminAndAdmin/Admin");
+const BranchModel = require("../Model/SuperAdminAndAdmin/Branch");
+const SuperAdminModel = require("../Model/SuperAdminAndAdmin/SuperAdmin");
+const Tickemodel = require("../Model/Tickets");
+const UserModel = require("../Model/User");
 
 const GetDashBoardDetails = async (req, res, next) => {
   try {
-    // Fetch all rooms
     const rooms = await RoomModel.find();
-
     let totalBeds = 0;
     let totalBooked = 0;
     let totalRemaining = 0;
@@ -69,7 +75,10 @@ const getearningandexpencemonth = async (req, res, next) => {
     const monthlyExpenses = await ExpenseModel.aggregate([
       {
         $group: {
-          _id: { month: { $month: "$createdAt" }, year: { $year: "$createdAt" } },
+          _id: {
+            month: { $month: "$createdAt" },
+            year: { $year: "$createdAt" },
+          },
           totalExpenses: { $sum: "$amount" },
         },
       },
@@ -80,8 +89,18 @@ const getearningandexpencemonth = async (req, res, next) => {
 
     // Helper to convert month number to month name
     const monthNames = [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
+      "January",
+      "February",
+      "March",
+      "April",
+      "May",
+      "June",
+      "July",
+      "August",
+      "September",
+      "October",
+      "November",
+      "December",
     ];
 
     // Convert aggregated data to the desired format
@@ -89,11 +108,13 @@ const getearningandexpencemonth = async (req, res, next) => {
 
     // Helper to find total for a given month and year
     const findTotal = (arr, month, year) => {
-      const result = arr.find(item => item._id.month === month && item._id.year === year);
+      const result = arr.find(
+        (item) => item._id.month === month && item._id.year === year
+      );
       return result ? result.totalEarnings || result.totalExpenses : 0;
     };
 
-    monthlyEarnings.forEach(earning => {
+    monthlyEarnings.forEach((earning) => {
       const month = earning._id.month;
       const year = earning._id.year;
       const expense = findTotal(monthlyExpenses, month, year);
@@ -106,10 +127,10 @@ const getearningandexpencemonth = async (req, res, next) => {
     });
 
     // Add expenses for any months not present in earnings
-    monthlyExpenses.forEach(expense => {
+    monthlyExpenses.forEach((expense) => {
       const month = expense._id.month;
       const year = expense._id.year;
-      if (!combinedData.some(data => data.month === monthNames[month - 1])) {
+      if (!combinedData.some((data) => data.month === monthNames[month - 1])) {
         combinedData.push({
           month: monthNames[month - 1],
           Income: 0,
@@ -119,7 +140,9 @@ const getearningandexpencemonth = async (req, res, next) => {
     });
 
     // Sort by month
-    combinedData.sort((a, b) => monthNames.indexOf(a.month) - monthNames.indexOf(b.month));
+    combinedData.sort(
+      (a, b) => monthNames.indexOf(a.month) - monthNames.indexOf(b.month)
+    );
 
     res.json(combinedData);
   } catch (err) {
@@ -127,8 +150,56 @@ const getearningandexpencemonth = async (req, res, next) => {
   }
 };
 
+//------------Get All Expence based on categoery -------------//
+
+const ExpencebyCategoery = async (req, res, next) => {
+  try {
+    const totalExpensesByName = await ExpenseModel.aggregate([
+      {
+        $group: {
+          _id: "$name",
+          totalAmount: { $sum: "$amount" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          name: "$_id",
+          totalAmount: 1,
+        },
+      },
+      {
+        $sort: { totalAmount: -1 },
+      },
+    ]);
+
+    res.status(200).json(totalExpensesByName);
+  } catch (error) {
+    next(error);
+  }
+};
+
+//------Delete All Collection ---------//
+
+const AllModal = async (req, res, next) => {
+  // let user=await UserModel.deleteMany()
+  // await RoomModel.deleteMany()
+  // await PaymentModel.deleteMany()
+  // await Tickemodel.deleteMany()
+  // await NotificationModel.deleteMany()
+  // await AdminModel.deleteMany()
+  // await CategoryModel.deleteMany()
+  // await StaffModel.deleteMany()
+  // await ExpenseModel.deleteMany()
+  // await SuperAdminModel.deleteMany()
+  // await BranchModel.deleteMany()
+
+  res.send("done");
+};
 
 module.exports = {
   GetDashBoardDetails,
   getearningandexpencemonth,
+  ExpencebyCategoery,
+  AllModal,
 };

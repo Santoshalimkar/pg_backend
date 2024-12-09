@@ -41,7 +41,7 @@ const UpdateExpense = async (req, res, next) => {
     let { id } = req.params;
 
     //----------Create expence-----------//
-    let expence = await ExpenseModel.findByIdAndUpdate(id, req.body,{new: true});
+    let expence = await ExpenseModel.findByIdAndUpdate(id, req.body, { new: true });
 
     res.status(200).json({
       status: true,
@@ -78,7 +78,7 @@ const GetAllExpenses = async (req, res, next) => {
 //-----------------Get All Expenses ----------------//
 const GetSinlgeExpences = async (req, res, next) => {
   try {
-    let {expenceId } = req.params;
+    let { expenceId } = req.params;
     if (!expenceId) {
       return next(new AppErr("expenceId Id is Required", 403));
     }
@@ -96,9 +96,29 @@ const GetSinlgeExpences = async (req, res, next) => {
   }
 };
 
+
+//----------------Delete Expence --------------//
+
+const Deleteexpence = async (req, res, next) => {
+  try {
+    let {expenceId } = req.params
+    if (!expenceId) {
+      return next(new AppErr("Expence id is required"))
+    }
+    let deleteexp = await ExpenseModel.findByIdAndDelete(expenceId)
+    res.status(200).json({
+      status: true,
+      statuscode: 200,
+      message: "Expence deleted successfully",
+    });
+  } catch (error) {
+    return next(new AppErr(error.message))
+  }
+}
 module.exports = {
   createExpense,
   UpdateExpense,
   GetAllExpenses,
   GetSinlgeExpences,
+  Deleteexpence
 };

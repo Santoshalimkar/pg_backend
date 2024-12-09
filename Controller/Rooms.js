@@ -5,7 +5,6 @@ const RoomModel = require("../Model/Rooms");
 const AdminModel = require("../Model/SuperAdminAndAdmin/Admin");
 const BranchModel = require("../Model/SuperAdminAndAdmin/Branch");
 const mongoose = require("mongoose");
-
 //----------------Create Room -----------------------//
 
 const CreateRoom = async (req, res, next) => {
@@ -27,12 +26,23 @@ const CreateRoom = async (req, res, next) => {
       floor,
     } = req.body;
 
+
     //---------Find Admin------------------//
     if (req.role === "admin") {
       let admin = await AdminModel.findById(req.user);
-      if (!admin.branch.includes(branch)) {
+      console.log(admin);
+    
+      // Convert the incoming branch string to an ObjectId
+      const branchObjectId = new mongoose.Types.ObjectId(branch);
+    
+      // Check if the admin's branch array contains this ObjectId
+      const branchExists = admin.branch.some(b => b.equals(branchObjectId));
+    
+      if (!branchExists) {
         return next(new AppErr("You are not allowed to add room", 403));
       }
+    
+      // Proceed with the rest of your logic if the branch exists
     }
 
     //---------Check Room Name----------//
@@ -124,7 +134,7 @@ const UploadImage = async (req, res, next) => {
 const GetAllRoomByBranch = async (req, res, next) => {
   try {
     let { branch } = req.params;
-    let room = await RoomModel.find({ branch: branch })
+    let room = await RoomModel.find({ branch: branch }).populate("Users")
     return res.status(200).json({
       status: true,
       statuscode: 200,

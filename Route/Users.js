@@ -10,9 +10,11 @@ const {
   UserLogin,
   GetOwnRoom,
   removeuserfromRoom,
+  AddUserFiles,
 } = require("../Controller/Users");
 const { body } = require("express-validator");
 const { isUser } = require("../MiddleWare/IsUser");
+const { upload } = require("../MiddleWare/fileUpload");
 
 const UserRouter = express.Router();
 
@@ -68,5 +70,7 @@ UserRouter.post(
 UserRouter.get("/profile/user", isUser, GetOwnRoom);
 
 UserRouter.put("/remove/user/:userId", IsSuperOrAdmin, removeuserfromRoom);
+
+UserRouter.patch("/add/file/:userid/:filetype", upload.single("image"), IsSuperOrAdmin, AddUserFiles)
 
 module.exports = UserRouter;
